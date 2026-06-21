@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История анализов - PneumoScan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <div class="logo">PneumoScan</div>
+        <nav class="nav">
+            <a href="/">Главная</a>
+            <a href="/analyze">Анализ</a>
+            <a href="/history">История</a>
+            <a href="/about">О системе</a>
+        </nav>
+    </header>
+
+    <main class="page-card">
+        <<div class="history-header">
+    <div>
+        <h1>История анализов</h1>
+        <p>
+            На этой странице отображаются результаты анализа рентгеновских
+            снимков и МРТ головного мозга.
+        </p>
+    </div>
+
+    <form action="/history/clear_all" method="POST">
+        <button type="submit" class="clear-btn">Очистить историю</button>
+    </form>
+</div>
+
+<div class="history-filters">
+    <a href="/history?type=all" class="filter-link {% if selected_type == 'all' %}filter-active{% endif %}">
+        Все
+    </a>
+
+    <a href="/history?type=xray" class="filter-link {% if selected_type == 'xray' %}filter-active{% endif %}">
+        Рентген
+    </a>
+
+    <a href="/history?type=brain" class="filter-link {% if selected_type == 'brain' %}filter-active{% endif %}">
+        МРТ мозга
+    </a>
+</div>
+
+        {% if history_list %}
+            <div class="table-wrapper">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Тип</th>
+                            <th>Файл</th>
+                            <th>Результат</th>
+                            <th>Вероятности</th>
+                            <th>Дата и время</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in history_list %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+
+                                <td>
+                                    {% if item.analysis_type == "Рентген" %}
+                                        <span class="type-badge type-xray">Рентген</span>
+                                    {% else %}
+                                        <span class="type-badge type-brain">МРТ мозга</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ item.filename }}</td>
+
+                                <td>
+                                    {% if item.result_class == "Норма" %}
+                                        <span class="status-badge status-normal">{{ item.result_class }}</span>
+                                    {% elif item.result_class == "Вирусная пневмония" %}
+                                        <span class="status-badge status-viral">{{ item.result_class }}</span>
+                                    {% elif item.result_class == "Бактериальная пневмония" %}
+                                        <span class="status-badge status-bacterial">{{ item.result_class }}</span>
+                                    {% elif item.result_class == "COVID-19" %}
+                                        <span class="status-badge status-covid">{{ item.result_class }}</span>
+                                    {% else %}
+                                        <span class="status-badge status-brain">{{ item.result_class }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if item.analysis_type == "Рентген" %}
+                                        <div class="history-probabilities">
+                                            <span>Норма: {{ item.normal_probability }}</span>
+                                            <span>Вирусная: {{ item.viral_probability }}</span>
+                                            <span>Бактериальная: {{ item.bacterial_probability }}</span>
+                                            <span>COVID-19: {{ item.covid_probability }}</span>
+                                        </div>
+                                    {% else %}
+                                        <div class="history-probabilities">
+                                            <span>Глиома: {{ item.glioma_probability }}</span>
+                                            <span>Менингиома: {{ item.meningioma_probability }}</span>
+                                            <span>Гипофиз: {{ item.pituitary_probability }}</span>
+                                            <span>Норма: {{ item.normal_probability }}</span>
+                                        </div>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ item.created_at }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h2>История пока пуста</h2>
+                <p>
+                    Выполните анализ изображения, и результат появится на этой странице.
+                </p>
+                <a href="/analyze" class="btn">Перейти к анализу</a>
+            </div>
+        {% endif %}
+    </main>
+</div>
+
+</body>
+</html>

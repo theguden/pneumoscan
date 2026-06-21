@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О системе - PneumoScan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <div class="logo">PneumoScan</div>
+        <nav class="nav">
+            <a href="/">Главная</a>
+            <a href="/analyze">Анализ</a>
+            <a href="/history">История</a>
+            <a href="/about">О системе</a>
+        </nav>
+    </header>
+
+    <main class="page-card">
+        <h1>О системе</h1>
+
+        <p>
+            PneumoScan — это учебная веб-система для анализа медицинских изображений
+            с использованием методов искусственного интеллекта и глубокого обучения.
+        </p>
+
+        <p>
+            Система поддерживает два типа медицинских исследований:
+        </p>
+
+        <div class="about-features">
+    <div class="feature-card">
+        <div class="feature-title">Рентген грудной клетки</div>
+        <div class="feature-text">
+            Анализ снимков для выявления пневмонии и COVID-19
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-title">МРТ головного мозга</div>
+        <div class="feature-text">
+            Определение типов опухолей и нормального состояния
+        </div>
+    </div>
+</div>
+
+        <h2>Рентген грудной клетки</h2>
+
+        <p>
+            Для рентгеновских изображений система выполняет классификацию на следующие классы:
+            норма, вирусная пневмония, бактериальная пневмония и COVID-19.
+        </p>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <span class="metric-title">Точность модели</span>
+                <span class="metric-value">78.54%</span>
+            </div>
+
+            <div class="metric-card">
+                <span class="metric-title">Потери модели</span>
+                <span class="metric-value">0.5188</span>
+            </div>
+
+            <div class="metric-card">
+                <span class="metric-title">Количество классов</span>
+                <span class="metric-value">4</span>
+            </div>
+        </div>
+
+        <h2>МРТ головного мозга</h2>
+
+        <p>
+            Для МРТ изображений система определяет наличие различных типов опухолей:
+            глиома, менингиома, опухоль гипофиза, а также нормальное состояние.
+        </p>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <span class="metric-title">Точность модели</span>
+                <span class="metric-value">76.02%</span>
+            </div>
+
+            <div class="metric-card">
+                <span class="metric-title">Потери модели</span>
+                <span class="metric-value">0.7276</span>
+            </div>
+
+            <div class="metric-card">
+                <span class="metric-title">Количество классов</span>
+                <span class="metric-value">4</span>
+            </div>
+        </div>
+
+        <p>
+            В основе системы используются сверточные нейронные сети (CNN),
+            обученные на размеченных медицинских датасетах.
+        </p>
+
+        <p>
+            Результаты анализа отображаются в виде вероятностей принадлежности
+            изображения к каждому классу, а также сохраняются в истории системы.
+        </p>
+
+        <div class="warning-box">
+            Система не является медицинским инструментом и не заменяет
+            консультацию врача. Результаты носят справочный характер.
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

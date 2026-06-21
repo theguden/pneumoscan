@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PneumoScan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <div class="logo">PneumoScan</div>
+        <nav class="nav">
+            <a href="/">Главная</a>
+            <a href="/analyze">Анализ</a>
+            <a href="/history">История</a>
+            <a href="/about">О системе</a>
+        </nav>
+    </header>
+
+    <main class="main-home">
+        <section class="main-home-block">
+            <h1>Система анализа медицинских изображений</h1>
+
+            <p>
+                PneumoScan — это учебное веб-приложение для анализа медицинских изображений
+                с применением методов глубокого обучения.
+            </p>
+
+            <p>
+                Система поддерживает два режима работы: анализ рентгеновских снимков
+                грудной клетки и анализ МРТ головного мозга.
+            </p>
+
+            <p>
+                Для рентгена система определяет норму, вирусную пневмонию,
+                бактериальную пневмонию и COVID-19. Для МРТ мозга система
+                классифицирует изображения по типам опухолей и нормальному состоянию.
+            </p>
+
+            <div class="main-home-actions">
+                <a href="/analyze" class="btn">Перейти к анализу</a>
+            </div>
+        </section>
+
+        <section class="main-home-grid">
+            <div class="main-home-card">
+                <h2>Что делает система</h2>
+                <p>
+                    Пользователь выбирает режим анализа, загружает изображение,
+                    после чего система обрабатывает его с помощью обученной
+                    нейронной сети.
+                </p>
+            </div>
+
+            <div class="main-home-card">
+                <h2>Что получает пользователь</h2>
+                <p>
+                    Система показывает предполагаемый класс, вероятности по каждому
+                    варианту, уровень уверенности модели и сохраняет результат в истории.
+                </p>
+            </div>
+
+            <div class="main-home-card">
+                <h2>Практическое назначение</h2>
+                <p>
+                    Проект демонстрирует применение искусственного интеллекта для
+                    предварительной оценки медицинских изображений в учебных целях.
+                </p>
+            </div>
+        </section>
+
+        <section class="main-home-block">
+            <h2>Как пользоваться системой</h2>
+
+            <div class="main-home-steps">
+                <div class="main-home-step">
+                    <span class="main-step-number">1</span>
+                    <p>Открыть страницу анализа изображений.</p>
+                </div>
+
+                <div class="main-home-step">
+                    <span class="main-step-number">2</span>
+                    <p>Выбрать режим: рентген грудной клетки или МРТ мозга.</p>
+                </div>
+
+                <div class="main-home-step">
+                    <span class="main-step-number">3</span>
+                    <p>Загрузить изображение в формате PNG, JPG или JPEG.</p>
+                </div>
+
+                <div class="main-home-step">
+                    <span class="main-step-number">4</span>
+                    <p>Получить результат классификации и вероятности по классам.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ - PneumoScan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <div class="logo">PneumoScan</div>
+        <nav class="nav">
+            <a href="/">Главная</a>
+            <a href="/analyze">Анализ</a>
+            <a href="/history">История</a>
+            <a href="/about">О системе</a>
+        </nav>
+    </header>
+
+    <main class="page-card">
+        <h1>Анализ изображения</h1>
+
+        <p>
+            Загрузите медицинское изображение в формате PNG, JPG или JPEG.
+        </p>
+        <p>
+            Выберите режим анализа: рентген грудной клетки или МРТ головного мозга.
+        </p>
+
+        <div class="upload-box">
+            <form action="/analyze" method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+                <label for="image" class="drop-zone" id="dropZone">
+                    <span class="drop-title">Перетащите изображение сюда</span>
+                    <span class="drop-text">или нажмите, чтобы выбрать файл PNG, JPG или JPEG</span>
+                    <span class="drop-file" id="fileName">Файл не выбран</span>
+                </label>
+
+                <input type="file" id="image" name="image" accept=".png,.jpg,.jpeg" class="file-input hidden-input">
+
+                <select name="mode" class="mode-select">
+                    <option value="xray">Рентген грудной клетки</option>
+                    <option value="brain">МРТ мозга</option>
+                </select>
+
+                <button type="submit" class="btn">Выполнить анализ</button>
+            </form>
+        </div>
+
+        {% if message %}
+            <div class="info-box">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        {% if result and result.error %}
+            <div class="error-box">
+                <strong>Анализ не выполнен.</strong>
+                <p>{{ result.error }}</p>
+            </div>
+        {% endif %}
+
+        {% if image_url and result and not result.error %}
+            <div class="result-section">
+                <div class="image-card">
+                    <h2>Загруженное изображение</h2>
+                    <img src="{{ image_url }}" alt="Загруженный снимок" class="preview-image">
+
+                    {% if result.gradcam_url %}
+                        <div class="gradcam-block">
+                            <h2>Тепловая карта Grad-CAM</h2>
+                            <img src="{{ result.gradcam_url }}" alt="Grad-CAM" class="preview-image">
+                            <p>
+                                Тепловая карта показывает области снимка, которые сильнее
+                                повлияли на решение модели.
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="result-card">
+                    <h2>Результат анализа</h2>
+
+                    <div class="result-main">
+                        <span class="result-label">Предполагаемый класс:</span>
+                        <div class="result-badge">{{ result.class_name }}</div>
+
+                        {% if result.confidence %}
+                            <div class="confidence-text">
+                                Уверенность модели: {{ result.confidence }}
+                            </div>
+                        {% endif %}
+
+                        {% if result.recommendation %}
+                            <div class="recommendation-text">
+                                {{ result.recommendation }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% if result.glioma %}
+                        <div class="probability-list">
+                            <div class="probability-item">
+                                <div class="probability-top">
+                                    <span>Глиома</span>
+                                    <span>{{ result.glioma }}</span>
+                                </div>
+                                <div class="probability-bar">
+                                    <div class="probability-fill glioma-fill" style="width: {{ result.glioma }};"></div>
+                                </div>
+                            </div>
+
+                            <div class="probability-item">
+                                <div class="probability-top">
+                                    <span>Менингиома</span>
+                                    <span>{{ result.meningioma }}</span>
+                                </div>
+                                <div class="probability-bar">
+                                    <div class="probability-fill meningioma-fill" style="width: {{ result.meningioma }};"></div>
+                                </div>
+                            </div>
+
+                            <div class="probability-item">
+                                <div class="probability-top">
+                                    <span>Опухоль гипофиза</span>
+                                    <span>{{ result.pituitary }}</span>
+                                </div>
+                                <div class="probability-bar">
+                                    <div class="probability-fill pituitary-fill" style="width: {{ result.pituitary }};"></div>
+                                </div>
+                            </div>
+
+                            <div class="probability-item">
+                                <div class="probability-top">
+                                    <span>Норма</span>
+                                    <span>{{ result.normal }}</span>
+                                </div>
+                                <div class="probability-bar">
+                                    <div class="probability-fill brain-normal-fill" style="width: {{ result.normal }};"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="probability-list">
+                            <div class="probability-item">
+                                <div class="probability-top">
+                                    <span>Норма</span>
+                                    <span>{{ result.normal }}</span>
+                                </div>
+                                <div class="probability-bar">
+                                    <div class="probability-fill normal-fill" style="width: {{ result.normal }};"></div>
+                                </div>
+                            </div>
+
+                            <div class="probability-item">
+                                <div class="probability-top">
+                                    <span>Вирусная пневмония</span>
+                                    <span>{{ result.viral }}</span>
+                                </div>
+                                <div class="probability-bar">
+                                    <div class="probability-fill viral-fill" style="width: {{ result.viral }};"></div>
+                                </div>
+                            </div>
+
+                            <div class="probability-item">
+                                <div class="probability-top">
+                                    <span>Бактериальная пневмония</span>
+                                    <span>{{ result.bacterial }}</span>
+                                </div>
+                                <div class="probability-bar">
+                                    <div class="probability-fill bacterial-fill" style="width: {{ result.bacterial }};"></div>
+                                </div>
+                            </div>
+
+                            <div class="probability-item">
+                                <div class="probability-top">
+                                    <span>COVID-19</span>
+                                    <span>{{ result.covid }}</span>
+                                </div>
+                                <div class="probability-bar">
+                                    <div class="probability-fill covid-fill" style="width: {{ result.covid }};"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <form action="/download_result_pdf" method="POST" class="download-form">
+                        <input type="hidden" name="class_name" value="{{ result.class_name }}">
+                        <input type="hidden" name="confidence" value="{{ result.confidence }}">
+                        <input type="hidden" name="normal" value="{{ result.normal }}">
+                        <input type="hidden" name="viral" value="{{ result.viral }}">
+                        <input type="hidden" name="bacterial" value="{{ result.bacterial }}">
+                        <input type="hidden" name="covid" value="{{ result.covid }}">
+
+                        <button type="submit" class="btn download-btn">
+                            Скачать PDF
+                        </button>
+                    </form>
+
+                    <div class="result-note">
+                        Система выполняет автоматизированную оценку изображения на основе обученной
+                        нейронной сети. Полученный результат носит справочный характер.
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                Результат анализа не является медицинским заключением и не заменяет консультацию врача.
+            </div>
+
+            <div class="clear-result-box">
+                <a href="/analyze" class="clear-result-btn">Очистить результат</a>
+            </div>
+        {% endif %}
+    </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
