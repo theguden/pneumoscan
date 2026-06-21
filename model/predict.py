@@ -2,6 +2,20 @@ import os
 import cv2
 import numpy as np
 import tensorflow as tf
+import keras
+
+
+from keras.src.layers.core.dense import Dense
+original_dense_from_config = Dense.from_config
+
+def patched_dense_from_config(cls, config):
+    if 'quantization_config' in config:
+        del config['quantization_config']
+    return original_dense_from_config(config)
+
+Dense.from_config = classmethod(patched_dense_from_config)
+# =====================================================================
+
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 
